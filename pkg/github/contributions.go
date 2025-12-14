@@ -26,9 +26,9 @@ type ContributionData struct {
 
 // GraphQL query to fetch contribution data
 const contributionsQuery = `
-query($userName:String!) {
+query($userName:String!, $from:DateTime!) {
   user(login: $userName) {
-    contributionsCollection {
+    contributionsCollection(from: $from) {
       contributionCalendar {
         totalContributions
         weeks {
@@ -46,10 +46,14 @@ query($userName:String!) {
 
 // GetContributions fetches GitHub contribution data for a user
 func GetContributions(username, token string) (*ContributionData, error) {
+	// Calculate date one year ago from now
+	oneYearAgo := time.Now().AddDate(-1, 0, 0)
+
 	query := map[string]interface{}{
 		"query": contributionsQuery,
-		"variables": map[string]string{
+		"variables": map[string]interface{}{
 			"userName": username,
+			"from":     oneYearAgo.Format(time.RFC3339),
 		},
 	}
 
@@ -96,10 +100,21 @@ func GetContributions(username, token string) (*ContributionData, error) {
 				} `json:"contributionsCollection"`
 			} `json:"user"`
 		} `json:"data"`
+		Errors []struct {
+			Message string `json:"message"`
+		} `json:"errors"`
 	}
 
 	if err := json.Unmarshal(body, &result); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	if len(result.Errors) > 0 {
+		return nil, fmt.Errorf("GraphQL errors: %v", result.Errors)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("API returned status %d: %s", resp.StatusCode, string(body))
 	}
 
 	// Convert to our data structure

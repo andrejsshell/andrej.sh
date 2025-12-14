@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 
 	"andrej.sh/pkg/github"
@@ -104,7 +105,12 @@ func Home(w http.ResponseWriter, r *http.Request, templates *template.Template) 
 	if ghToken != "" && ghUsername != "" {
 		if contributions, err := github.GetContributions(ghUsername, ghToken); err == nil {
 			data.Contributions = contributions
+			log.Printf("✓ Fetched GitHub contributions: %d total", contributions.TotalContributions)
+		} else {
+			log.Printf("⚠ Failed to fetch GitHub contributions: %v", err)
 		}
+	} else {
+		log.Println("⚠ GitHub credentials not provided, skipping contribution graph")
 	}
 
 	templates.ExecuteTemplate(w, "index.html", data)
