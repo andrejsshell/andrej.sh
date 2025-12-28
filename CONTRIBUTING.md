@@ -12,7 +12,7 @@
 
 1. clone the repository
 ```bash
-git clone https://github.com/aacevski/andrej.sh.git
+git clone https://github.com/andrejsshell/andrej.sh.git
 cd andrej.sh
 ```
 

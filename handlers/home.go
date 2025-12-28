@@ -104,7 +104,7 @@ func Home(w http.ResponseWriter, r *http.Request, templates *template.Template) 
 			{
 				Name:        "andrej.sh",
 				Description: "this website. minimal portfolio built with go templates and astro. no unnecessary javascript. fast and clean.",
-				URL:         "https://github.com/aacevski/andrej.sh",
+				URL:         "https://github.com/andrejsshell/andrej.sh",
 			},
 		},
 		ReadingStats: readingStats,

@@ -58,10 +58,10 @@ func RSS(w http.ResponseWriter, r *http.Request) {
 	for _, post := range posts {
 		items = append(items, Item{
 			Title:       post.Title,
-			Link:        "https://aacevski.com/blog/" + post.Slug,
+			Link:        "https://andrej.sh/blog/" + post.Slug,
 			Description: post.Excerpt,
 			PubDate:     post.RawDate.Format(time.RFC1123Z),
-			GUID:        "https://aacevski.com/blog/" + post.Slug,
+			GUID:        "https://andrej.sh/blog/" + post.Slug,
 		})
 	}
 
@@ -75,11 +75,11 @@ func RSS(w http.ResponseWriter, r *http.Request) {
 		AtomNS:  "http://www.w3.org/2005/Atom",
 		Channel: Channel{
 			Title:       "Andrej Acevski",
-			Link:        "https://aacevski.com",
+			Link:        "https://andrej.sh",
 			Description: "breaking code, building tools. software engineer writing about go, typescript, and making things that work.",
 			Language:    "en-us",
 			AtomLink: AtomLink{
-				Href: "https://aacevski.com/rss.xml",
+				Href: "https://andrej.sh/rss.xml",
 				Rel:  "self",
 				Type: "application/rss+xml",
 			},

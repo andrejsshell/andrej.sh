@@ -176,7 +176,7 @@ but for now? it works. it's fast. it's mine.
 
 this website is fully open source. check out the complete implementation:
 
-[github.com/aacevski/andrej.sh](https://github.com/aacevski/andrej.sh)
+[github.com/andrejsshell/andrej.sh](https://github.com/andrejsshell/andrej.sh)
 
 the koreader integration lives in `pkg/koreader/` - feel free to use it, fork it, make it better.
 
