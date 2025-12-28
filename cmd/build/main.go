@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"andrej.sh/pkg/books"
 	"andrej.sh/pkg/github"
-	"andrej.sh/pkg/koreader"
 	"andrej.sh/pkg/utils"
 	"github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/joho/godotenv"
@@ -35,7 +35,7 @@ type HomeData struct {
 	AsciiArt         string
 	Work             []WorkItem
 	Projects         []ProjectItem
-	ReadingStats     *koreader.ReadingStats
+	ReadingStats     *books.ReadingStats
 	Contributions    *github.ContributionData
 }
 
@@ -126,13 +126,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("Fetching book statistics from KOReader...")
-	readingStats, err := koreader.FetchStatsFromEnv()
+	log.Println("Loading books from markdown files...")
+	readingStats, err := books.LoadBooksFromMarkdown()
 	if err != nil {
-		log.Printf("Warning: Failed to fetch book statistics: %v", err)
-		readingStats = &koreader.ReadingStats{}
+		log.Printf("Warning: Failed to load books: %v", err)
+		readingStats = &books.ReadingStats{
+			CurrentBooks:  []books.BookStats{},
+			FinishedBooks: []books.BookStats{},
+		}
 	} else {
-		log.Printf("✓ Fetched statistics for %d books", readingStats.TotalBooks)
+		log.Printf("✓ Loaded %d books", readingStats.TotalBooks)
 	}
 
 	data := getHomeData(readingStats)
@@ -538,8 +541,7 @@ func parseBlogPost(filePath, slug string) (BlogPost, error) {
 	return post, nil
 }
 
-func getHomeData(readingStats *koreader.ReadingStats) HomeData {
-	// Fetch GitHub contributions
+func getHomeData(readingStats *books.ReadingStats) HomeData {
 	var contributions *github.ContributionData
 	ghToken := os.Getenv("GITHUB_TOKEN")
 	ghUsername := os.Getenv("GITHUB_USERNAME")
@@ -560,6 +562,11 @@ func getHomeData(readingStats *koreader.ReadingStats) HomeData {
 		asciiArt = ""
 	}
 
+	currentlyReading := ""
+	if len(readingStats.CurrentBooks) > 0 {
+		currentlyReading = readingStats.CurrentBooks[0].Title
+	}
+
 	return HomeData{
 		Name:             "Andrej Acevski",
 		Nickname:         "andrej's shell",
@@ -567,7 +574,7 @@ func getHomeData(readingStats *koreader.ReadingStats) HomeData {
 		Role:             "product engineer @ tolt",
 		Status:           "breaking code",
 		Bio:              "software engineer, open source advocate. fcse graduate. building kaneo and tools that make developers' lives easier.",
-		CurrentlyReading: "the art of doing science and engineering",
+		CurrentlyReading: currentlyReading,
 		AsciiArt:         asciiArt,
 		Work: []WorkItem{
 			{

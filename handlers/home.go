@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"andrej.sh/pkg/books"
 	"andrej.sh/pkg/github"
-	"andrej.sh/pkg/koreader"
 	"andrej.sh/pkg/utils"
 )
 
@@ -21,7 +21,7 @@ type HomeData struct {
 	AsciiArt         string
 	Work             []WorkItem
 	Projects         []ProjectItem
-	ReadingStats     *koreader.ReadingStats
+	ReadingStats     *books.ReadingStats
 	Contributions    *github.ContributionData
 }
 
@@ -45,6 +45,19 @@ func Home(w http.ResponseWriter, r *http.Request, templates *template.Template) 
 		asciiArt = ""
 	}
 
+	readingStats, err := books.LoadBooksFromMarkdown()
+	if err != nil {
+		readingStats = &books.ReadingStats{
+			CurrentBooks:  []books.BookStats{},
+			FinishedBooks: []books.BookStats{},
+		}
+	}
+
+	currentlyReading := ""
+	if len(readingStats.CurrentBooks) > 0 {
+		currentlyReading = readingStats.CurrentBooks[0].Title
+	}
+
 	data := HomeData{
 		Name:             "Andrej Acevski",
 		Nickname:         "andrej's shell",
@@ -52,7 +65,7 @@ func Home(w http.ResponseWriter, r *http.Request, templates *template.Template) 
 		Role:             "product engineer @ tolt",
 		Status:           "breaking code",
 		Bio:              "software engineer, open source advocate. fcse graduate. building kaneo and tools that make developers' lives easier.",
-		CurrentlyReading: "the art of doing science and engineering",
+		CurrentlyReading: currentlyReading,
 		AsciiArt:         asciiArt,
 		Work: []WorkItem{
 			{
@@ -94,10 +107,7 @@ func Home(w http.ResponseWriter, r *http.Request, templates *template.Template) 
 				URL:         "https://github.com/aacevski/andrej.sh",
 			},
 		},
-		ReadingStats: &koreader.ReadingStats{
-			CurrentBooks:  []koreader.BookStats{},
-			FinishedBooks: []koreader.BookStats{},
-		},
+		ReadingStats: readingStats,
 	}
 
 	ghToken := utils.GetEnvOrDefault("GITHUB_TOKEN", "")

@@ -56,22 +56,9 @@ GITHUB_TOKEN=ghp_your_personal_access_token_here
 
 If not provided, the contribution graph will be skipped.
 
-### KOReader Book Statistics
+### Book Tracking
 
-Fetches reading statistics from your KOReader database synced to Koofr.
-
-1. configure KOReader to sync to Koofr
-
-2. add to `.env`:
-```bash
-KOOFR_EMAIL=your-email@example.com
-KOOFR_PASSWORD=your-password
-KOREADER_DB_PATH=/KOReader/statistics.sqlite3
-```
-
-Adjust `KOREADER_DB_PATH` if your setup differs.
-
-If not provided, the build continues without book statistics.
+Books are tracked via markdown files in `content/books/`. No external service required.
 
 ## Building
 
@@ -88,7 +75,7 @@ Output will be in `./dist`
 The build process:
 1. cleans the dist directory
 2. fetches GitHub contributions (if configured)
-3. fetches KOReader statistics (if configured)
+3. loads books from markdown files
 4. generates HTML from go templates
 5. parses markdown blog posts
 6. generates RSS feed
@@ -111,9 +98,6 @@ The site automatically rebuilds and redeploys every 24 hours via GitHub Actions.
 Configure GitHub secrets in repository settings:
 - `GH_PAT` - GitHub personal access token
 - `GH_USERNAME` - your GitHub username
-- `KOOFR_EMAIL` - Koofr email
-- `KOOFR_PASSWORD` - Koofr password
-- `KOREADER_DB_PATH` - path to KOReader db
 - `CLOUDFLARE_API_TOKEN` - Cloudflare API token
 - `CLOUDFLARE_ACCOUNT_ID` - Cloudflare account ID
 
@@ -151,6 +135,59 @@ This will:
 2. get your account ID from Cloudflare dashboard URL
 
 3. configure in GitHub secrets or local env
+
+## Managing Books
+
+Books are tracked via markdown files in `content/books/`.
+
+### Adding a New Book
+
+1. create a markdown file in `content/books/reading/`:
+```bash
+touch content/books/reading/book-title.md
+```
+
+2. add frontmatter:
+```markdown
+---
+title: "Book Title"
+author: "Author Name"
+pages: 300
+current_page: 0
+started: "2025-12-28"
+last_updated: "2025-12-28"
+---
+```
+
+3. rebuild to see changes:
+```bash
+make build
+```
+
+### Updating Progress
+
+1. edit the markdown file
+2. update `current_page` and `last_updated`
+3. commit and push
+
+### Finishing a Book
+
+1. move file to `content/books/finished/`:
+```bash
+git mv content/books/reading/book.md content/books/finished/
+```
+
+2. add `finished` date and set `current_page` to total pages:
+```markdown
+current_page: 300
+finished: "2025-12-28"
+```
+
+3. commit and push
+
+### Reading Time
+
+Reading time is estimated at ~1.25 minutes per page read.
 
 ## Writing Blog Posts
 
@@ -229,11 +266,12 @@ make clean    # remove dist/ and tmp/ directories
 │   ├── build/       # static site builder
 │   └── deploy/      # deployment script
 ├── content/
-│   └── blog/        # markdown blog posts
+│   ├── blog/        # markdown blog posts
+│   └── books/       # book tracking (reading/ and finished/)
 ├── handlers/        # http handlers for dev server
 ├── pkg/
+│   ├── books/       # book tracking from markdown
 │   ├── github/      # github api integration
-│   ├── koreader/    # koreader stats fetching
 │   └── utils/       # utility functions
 ├── static/
 │   ├── css/         # stylesheets
@@ -250,11 +288,6 @@ make clean    # remove dist/ and tmp/ directories
 - check your `GITHUB_TOKEN` is valid
 - ensure token has `read:user` scope
 - verify `GITHUB_USERNAME` is correct
-
-### KOReader stats not showing
-- confirm Koofr credentials are correct
-- verify KOReader is syncing to Koofr
-- check `KOREADER_DB_PATH` matches your setup
 
 ### Deployment fails
 - verify wrangler is installed: `wrangler --version`

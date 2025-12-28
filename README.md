@@ -7,7 +7,7 @@ minimal portfolio built with go templates. deployed on cloudflare pages.
 - **portfolio** - clean showcase of work and projects
 - **blog** - markdown-based with syntax highlighting
 - **github activity** - live contribution graph
-- **books** - reading stats synced from koreader
+- **books** - manual reading tracking via markdown
 - **rss feed** - subscribe to updates
 - **cmd+k search** - quick navigation
 
@@ -29,7 +29,7 @@ make deploy
 - go templates
 - static site generation
 - cloudflare pages
-- koreader + koofr integration
+- markdown-based book tracking
 - github api
 
 ## documentation

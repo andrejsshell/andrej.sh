@@ -39,9 +39,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           GITHUB_USERNAME: ${{ secrets.GH_USERNAME }}
-          KOOFR_EMAIL: ${{ secrets.KOOFR_EMAIL }}
-          KOOFR_PASSWORD: ${{ secrets.KOOFR_PASSWORD }}
-          KOREADER_DB_PATH: ${{ secrets.KOREADER_DB_PATH }}
         run: go run cmd/build/main.go
 
       - name: Deploy to Cloudflare Pages

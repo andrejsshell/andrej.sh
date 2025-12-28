@@ -4,6 +4,8 @@ date: "2025-11-08"
 excerpt: "forget goodreads. i turned my kindle into a reading stats machine that syncs to my portfolio website automatically. here's how."
 ---
 
+> **update (december 2025)**: amazon patched the kindle jailbreak, so i've migrated to a simpler markdown-based manual tracking system. the code in this post is archived for reference. the current site uses markdown files in `content/books/` instead of koreader sync.
+
 ## the problem
 
 i love reading, but tracking what i read was a mess. kindle's built-in stats are basic, goodreads feels bloated, and i wanted something that just... worked. something minimal. something i controlled.
