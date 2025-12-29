@@ -15,6 +15,8 @@ type BookStats struct {
 	Progress         float64
 	Pages            int
 	CurrentPage      int
+	Loc              int
+	CurrentLoc       int
 	Status           string
 	LastRead         time.Time
 	Started          time.Time
@@ -32,6 +34,12 @@ type ReadingStats struct {
 }
 
 const MinutesPerPage = 1.25
+
+// LocToPage converts Kindle locations to estimated pages
+// Rough approximation: ~25-30 locations per page
+func LocToPage(loc int) int {
+	return loc / 25
+}
 
 func LoadBooksFromMarkdown() (*ReadingStats, error) {
 	stats := &ReadingStats{
@@ -146,6 +154,10 @@ func parseBookFile(filePath string) (BookStats, error) {
 			fmt.Sscanf(value, "%d", &book.Pages)
 		case "current_page":
 			fmt.Sscanf(value, "%d", &book.CurrentPage)
+		case "loc":
+			fmt.Sscanf(value, "%d", &book.Loc)
+		case "current_loc":
+			fmt.Sscanf(value, "%d", &book.CurrentLoc)
 		case "started":
 			if t, err := time.Parse("2006-01-02", value); err == nil {
 				book.Started = t
@@ -161,6 +173,18 @@ func parseBookFile(filePath string) (BookStats, error) {
 		}
 	}
 
+	// Handle mixed format: pages + current_loc
+	if book.Pages > 0 && book.CurrentLoc > 0 && book.CurrentPage == 0 {
+		book.CurrentPage = LocToPage(book.CurrentLoc)
+	}
+
+	// Handle loc-only books by converting to estimated pages
+	if book.Loc > 0 && book.Pages == 0 {
+		book.Pages = LocToPage(book.Loc)
+		book.CurrentPage = LocToPage(book.CurrentLoc)
+	}
+
+	// Calculate progress
 	if book.Pages > 0 {
 		book.Progress = (float64(book.CurrentPage) / float64(book.Pages)) * 100
 		if book.Progress > 100 {
@@ -168,6 +192,7 @@ func parseBookFile(filePath string) (BookStats, error) {
 		}
 	}
 
+	// Calculate reading time based on pages (or converted pages from loc)
 	book.TotalReadingTime = int(float64(book.CurrentPage) * MinutesPerPage)
 
 	return book, nil
