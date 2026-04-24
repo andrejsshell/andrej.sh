@@ -43,8 +43,8 @@ export default async function OG() {
             maxWidth: 960,
           }}
         >
-          Software engineer and open source contributor. FCSE graduate.
-          Building Kaneo, and small tools that make developers’ lives easier.
+          Software engineer and open source contributor. Building Kaneo, and
+          small tools that make developers’ lives easier.
         </div>
       </div>
     ),
