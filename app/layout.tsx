@@ -94,9 +94,9 @@ export default function RootLayout({
         <link rel="me" href={site.author.github} />
         <link rel="me" href={site.author.twitterUrl} />
         <link rel="me" href={`mailto:${site.author.email}`} />
-        <div className="page">
+        <main className="page">
           <div className="container">{children}</div>
-        </div>
+        </main>
         <Analytics />
         <SpeedInsights />
       </body>
