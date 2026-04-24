@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { projects, workHistory } from "@/app/data";
 
-export const metadata = {
-  title: "Projects — andrej.sh",
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "Open source projects and work history by Andrej Acevski — Kaneo, Tolt, CodeChem, and more.",
+  alternates: { canonical: "/projects" },
+  openGraph: {
+    title: "Projects — andrej.sh",
+    url: "/projects",
+    type: "website",
+  },
 };
 
 export default function ProjectsPage() {

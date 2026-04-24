@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { STIX_Two_Text, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { site } from "@/lib/site";
 import "./globals.css";
 
 const stixTwoText = STIX_Two_Text({
@@ -18,23 +20,17 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
-const siteUrl = "https://andrej.sh";
-const siteName = "andrej.sh";
-const siteTitle = "Andrej Acevski — andrej.sh";
-const siteDescription =
-  "Andrej Acevski — software engineer at Tolt, building Kaneo and other tools that make developers’ lives easier. Writing about Go, TypeScript, and open source.";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(site.url),
   title: {
-    default: siteTitle,
-    template: "%s — andrej.sh",
+    default: site.title,
+    template: `%s — ${site.name}`,
   },
-  description: siteDescription,
-  applicationName: siteName,
-  authors: [{ name: "Andrej Acevski", url: siteUrl }],
-  creator: "Andrej Acevski",
-  publisher: "Andrej Acevski",
+  description: site.description,
+  applicationName: site.name,
+  authors: [{ name: site.author.name, url: site.url }],
+  creator: site.author.name,
+  publisher: site.author.name,
   keywords: [
     "Andrej Acevski",
     "andrej.sh",
@@ -48,25 +44,26 @@ export const metadata: Metadata = {
     "Skopje",
   ],
   alternates: {
-    canonical: "/",
     types: {
-      "application/rss+xml": [{ url: "/rss.xml", title: "andrej.sh — Writing" }],
+      "application/rss+xml": [
+        { url: "/rss.xml", title: `${site.name} — Writing` },
+      ],
     },
   },
   openGraph: {
     type: "website",
-    siteName,
-    title: siteTitle,
-    description: siteDescription,
-    url: siteUrl,
-    locale: "en_US",
+    siteName: site.name,
+    title: site.title,
+    description: site.description,
+    url: site.url,
+    locale: site.locale,
   },
   twitter: {
     card: "summary_large_image",
-    title: siteTitle,
-    description: siteDescription,
-    creator: "@andrejsshell",
-    site: "@andrejsshell",
+    title: site.title,
+    description: site.description,
+    creator: site.author.twitter,
+    site: site.author.twitter,
   },
   robots: {
     index: true,
@@ -88,14 +85,18 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang={site.language}
       className={`${stixTwoText.variable} ${jetbrainsMono.variable}`}
     >
       <body>
+        <link rel="me" href={site.author.github} />
+        <link rel="me" href={site.author.twitterUrl} />
+        <link rel="me" href={`mailto:${site.author.email}`} />
         <div className="page">
           <div className="container">{children}</div>
         </div>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

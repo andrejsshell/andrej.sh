@@ -1,11 +1,47 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/json-ld";
 import { formatShortDate, getPosts } from "@/lib/content";
+import { site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function Home() {
   const posts = await getPosts();
 
+  const personLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: site.author.name,
+    url: site.url,
+    image: `${site.url}/apple-icon.png`,
+    jobTitle: "Product Engineer",
+    description: site.description,
+    sameAs: [site.author.github, site.author.twitterUrl],
+    worksFor: { "@type": "Organization", name: "Tolt", url: "https://tolt.com" },
+    alumniOf: {
+      "@type": "CollegeOrUniversity",
+      name: "Faculty of Computer Science and Engineering, Ss. Cyril and Methodius University",
+    },
+  };
+
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    url: site.url,
+    name: site.name,
+    description: site.description,
+    inLanguage: site.language,
+    author: { "@type": "Person", name: site.author.name, url: site.url },
+  };
+
   return (
     <div className="col page-enter">
+      <JsonLd data={personLd} />
+      <JsonLd data={websiteLd} />
+
       <header className="hero">
         <h1 className="hero-name">Andrej Acevski</h1>
       </header>

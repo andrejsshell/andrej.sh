@@ -6,19 +6,47 @@ export type PostMeta = {
   title: string;
   date: string;
   summary?: string;
+  wordCount: number;
+  readingMinutes: number;
 };
 
 type ImportedMdx = {
   default: React.ComponentType;
-  metadata: Omit<PostMeta, "slug">;
+  metadata: { title: string; date: string; summary?: string };
 };
 
+const POSTS_DIR = path.join(process.cwd(), "content", "posts");
+
 export async function getPostSlugs(): Promise<string[]> {
-  const abs = path.join(process.cwd(), "content", "posts");
-  const files = await fs.readdir(abs);
+  const files = await fs.readdir(POSTS_DIR);
   return files
     .filter((f) => f.endsWith(".mdx"))
     .map((f) => f.replace(/\.mdx$/, ""));
+}
+
+async function readRaw(slug: string) {
+  return fs.readFile(path.join(POSTS_DIR, `${slug}.mdx`), "utf-8");
+}
+
+function stripMdx(raw: string) {
+  return raw
+    .replace(/^export const metadata[\s\S]*?^};\s*$/m, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`[^`]*`/g, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/!\[.*?\]\(.*?\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[#*_>~`-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export async function readingStats(slug: string) {
+  const raw = await readRaw(slug);
+  const text = stripMdx(raw);
+  const wordCount = text ? text.split(/\s+/).length : 0;
+  const readingMinutes = Math.max(1, Math.round(wordCount / 220));
+  return { wordCount, readingMinutes };
 }
 
 export async function getPosts(): Promise<PostMeta[]> {
@@ -28,7 +56,14 @@ export async function getPosts(): Promise<PostMeta[]> {
       const mod = (await import(
         `@/content/posts/${slug}.mdx`
       )) as ImportedMdx;
-      return { slug, ...mod.metadata } satisfies PostMeta;
+      const stats = await readingStats(slug);
+      return {
+        slug,
+        title: mod.metadata.title,
+        date: mod.metadata.date,
+        summary: mod.metadata.summary,
+        ...stats,
+      } satisfies PostMeta;
     }),
   );
   return loaded.sort(

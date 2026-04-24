@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import { reading, type Book } from "@/app/data";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Reading",
+  description: "Books I’m currently reading, and a shelf of the ones I’ve finished.",
+  alternates: { canonical: "/reading" },
+  openGraph: {
+    title: "Reading — andrej.sh",
+    url: "/reading",
+    type: "website",
+  },
 };
 
 function BookCard({ book }: { book: Book }) {
