@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "Open source projects and work history by Andrej Acevski — Kaneo, Tolt, CodeChem, and more.",
   alternates: { canonical: "/projects" },
   openGraph: {
-    title: "Projects — andrej.sh",
+    title: "Projects",
     url: "/projects",
     type: "website",
   },

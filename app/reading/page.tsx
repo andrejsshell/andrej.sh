@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Books I’m currently reading, and a shelf of the ones I’ve finished.",
   alternates: { canonical: "/reading" },
   openGraph: {
-    title: "Reading — andrej.sh",
+    title: "Reading",
     url: "/reading",
     type: "website",
   },
