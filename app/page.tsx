@@ -86,8 +86,8 @@ export default async function Home() {
       </ul>
 
       <p style={{ marginTop: "1rem" }}>
-        Elsewhere: see what I’m <Link href="/projects">building</Link>, or what
-        I’m <Link href="/reading">reading</Link>. Find me on{" "}
+        Elsewhere: see what I’m <Link href="/reading">reading</Link>, find me
+        on{" "}
         <a
           href="https://github.com/andrejsshell"
           target="_blank"
