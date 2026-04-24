@@ -1,0 +1,129 @@
+export const metadata = {
+  title: "A reading stats dashboard, built from my Kindle",
+  date: "2025-11-08",
+  summary:
+    "KOReader, a WebDAV sync, and a SQLite database. A small weekend project that finally taught me what I’ve been reading.",
+};
+
+I love reading. I’m bad at tracking what I read.
+
+Kindle’s built-in stats are basic. Goodreads feels bloated. I wanted something minimal that I controlled. So I built one.<Sidenote n={1}>I’ve since switched to a simpler Markdown-based system — Amazon patched the jailbreak in late 2025. The approach below still works if you’re on an older firmware.</Sidenote>
+
+## KOReader
+
+[KOReader](https://koreader.rocks) is an open-source e-book reader that runs on Kindle. It’s fast, customizable, and — for my purposes — it logs everything to a SQLite database.
+
+The killer feature: it can sync that database to cloud storage over WebDAV.
+
+## Koofr as the sync target
+
+[Koofr](https://koofr.eu) offers WebDAV out of the box. No API to wrap. No rate limits at personal scale. Mount it like a network drive and you’re done.
+
+Generous free tier. Privacy-conscious. Based in the EU.<Sidenote n={2}>Dropbox supports WebDAV too, but Koofr’s free tier is enough for something as tiny as a SQLite file.</Sidenote>
+
+## Setting it up
+
+```text
+Settings → Network → Cloud Storage → Add WebDAV
+
+Server:   https://app.koofr.net/dav/Koofr
+Username: your Koofr email
+Password: app-specific password (not your main login)
+```
+
+Turn on automatic sync. From then on, every time you read, KOReader writes `statistics.sqlite3` to Koofr.
+
+## The data flow
+
+My portfolio site is the reader. It pulls the database, parses it, and renders stats.
+
+```ts
+async function fetchKOReaderStats() {
+  const client = createWebDAVClient(webdavURL, {
+    username: email,
+    password: password,
+  });
+
+  const data = await client.getFileContents(dbPath);
+  const db = await openSQLite(data);
+
+  return parseKOReaderDatabase(db);
+}
+```
+
+Two tables matter:
+
+- `book` — titles, authors, pages, `last_open`
+- `page_stat_data` — individual reading sessions, with timestamps and duration
+
+Everything else is aggregations.
+
+## Parsing the database
+
+```ts
+async function parseKOReaderDatabase(db: SQLiteDB) {
+  const books = await db.all(`
+    SELECT title, authors, pages, last_open
+    FROM book
+    ORDER BY last_open DESC
+  `);
+
+  for (const book of books) {
+    const { id } = await db.get(
+      "SELECT id FROM book WHERE title = ?",
+      [book.title],
+    );
+
+    const currentPage = await db.get(`
+      SELECT page FROM page_stat_data
+      WHERE id_book = ?
+      ORDER BY start_time DESC LIMIT 1
+    `, [id]);
+
+    const timeData = await db.get(`
+      SELECT SUM(duration) AS total
+      FROM page_stat_data
+      WHERE id_book = ?
+    `, [id]);
+
+    const progress = (currentPage?.page ?? 0) / book.pages;
+    const minutes = Math.floor((timeData?.total ?? 0) / 60);
+  }
+}
+```
+
+## The only thing I got wrong the first time
+
+For current page, I started with `MAX(page)`. That felt obviously correct.
+
+It wasn’t.<Sidenote n={3}>If you flip back to re-read a paragraph, that page becomes your “current page” for the rest of eternity. Books accumulate false progress every time you stop to check something.</Sidenote>
+
+What you actually want is the page from the most recent reading session:
+
+```sql
+SELECT page
+FROM page_stat_data
+WHERE id_book = ?
+ORDER BY start_time DESC
+LIMIT 1
+```
+
+## Environment
+
+```bash
+KOOFR_WEBDAV_URL=https://app.koofr.net/dav/Koofr
+KOOFR_EMAIL=you@example.com
+KOOFR_PASSWORD=app-specific-password
+KOREADER_DB_PATH=/KOReader/statistics.sqlite3
+```
+
+## What I ended up with
+
+- **Currently reading**, with real progress bars
+- **Finished**, sorted by date
+- **Reading time**, in actual minutes
+- **Pages**, from the database, not estimated
+
+All of it updates automatically when my Kindle syncs. Total cost: $0/month.
+
+The code lives in [github.com/andrejsshell/andrej.sh](https://github.com/andrejsshell/andrej.sh) — the integration is in `pkg/koreader/`. Fork it, use it, make it better.

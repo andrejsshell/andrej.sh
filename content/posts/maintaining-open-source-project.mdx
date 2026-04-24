@@ -1,0 +1,120 @@
+export const metadata = {
+  title: "Maintaining an open source project",
+  date: "2025-11-25",
+  summary:
+    "Shipping Kaneo was the easy part. Here’s what I’ve learned about the year that followed.",
+};
+
+I built [Kaneo](https://kaneo.app), a minimal kanban board you can self-host. I shipped v1, posted it on Reddit, and got a few stars on GitHub.
+
+Then people actually started using it. That’s when I learned that shipping is the easy part.
+
+## Documentation is a conversation
+
+I spent hours writing setup guides, configuration examples, and troubleshooting sections. I thought the docs were clear.
+
+Then someone opened an issue asking a question that was, word for word, answered in the README. My first reaction was frustration. My second reaction was better: the README assumes too much.
+
+Docs aren’t a deliverable. They’re a conversation that never ends. Every issue I close is a chance to tighten a page nobody should have had to read in the first place.
+
+## Support is product development
+
+Maintaining Kaneo means debugging other people’s setups: Raspberry Pis, corporate proxies, Kubernetes clusters with custom networking, ARM NAS boxes I’ve never heard of. Every environment I don’t expect teaches me something.
+
+The tricky part is time. I have a day job. I have new features I want to build. I want to help everyone. I’m still learning where the line is.
+
+## Saying no is the product
+
+People want Kaneo to do more. That’s the best signal you can get. It means they’re using it.
+
+But every feature request is a decision:
+
+- Does this fit the vision?
+- Can I maintain it long-term?
+- What else doesn’t get built if I build this?
+
+I’ve learned to be transparent about the answer.
+
+> I love this idea, but it’s outside Kaneo’s scope. Here’s why, and here’s where it might live instead.
+
+Most people understand. Some don’t. That’s fine. Kaneo does one thing: kanban boards you own. Not project management. Not time tracking. Not team chat.
+
+## Migrations are trust, not code
+
+At some point, the schema needed a refactor. The new design would unlock features people wanted. But ~200 people were running Kaneo in production with their team’s actual data.
+
+If the migration broke, they’d lose trust. Some would lose data.
+
+So I tested it against every version going back to v1. I wrote upgrade notes. I added a dry-run flag. I added validation checks. I released it and held my breath.
+
+Most migrations went smoothly. A few didn’t, not because people skipped the notes, but because they had setups I couldn’t have predicted:
+
+```bash
+# docker on their laptops
+docker compose up -d
+
+# kubernetes clusters at work
+kubectl apply -f kaneo.yaml
+
+# raspberry pi in their home lab
+# (1GB of RAM and dreams)
+
+# bare metal on old servers
+# (running since 2015)
+```
+
+We debugged together. They were patient. I was grateful.
+
+## Automation is the only answer
+
+You can’t scale yourself. You scale the bits around you.
+
+```yaml
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm audit --audit-level=high
+
+  release:
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm semantic-release
+```
+
+Issue templates. PR checks. Release automation. Security scans. Each one takes a day to wire up and saves me a weekend every month.
+
+## What I’d tell past me
+
+1. **Write the docs earlier than you think you need to.** The cost is up front; the payoff is every issue you don’t have to answer.
+2. **Automate from day one.** Tests, releases, security. Automation scales. You don’t.
+3. **Be clear about scope.** Say what the project is *and* what it isn’t. It saves arguments on both sides.
+4. **Migrations deserve more care than the feature that needs them.** Test them against real data. Add a rollback. Write the notes.
+5. **It’s okay to be slow.** You’re not a company. You’re a person with a day job and a life.
+6. **Contributors are a gift.** The ones who stick around are the ones who make it worth it.
+
+## Would I do it again
+
+Absolutely.
+
+Kaneo started because I wanted a kanban board I controlled. It became something more: a handful of people who value owning their tools enough to set up a Postgres database on a weekend.
+
+The maintenance is real. The migrations are stressful. But people run their businesses on this thing. They send thank-you notes. They submit thoughtful bug reports at 11pm. They help each other in discussions while I’m asleep.
+
+That’s why I keep going.
+
+Kaneo is open source and free forever: [github.com/usekaneo/kaneo](https://github.com/usekaneo/kaneo). If you find a bug, I’ll fix it. Probably at 11pm.
