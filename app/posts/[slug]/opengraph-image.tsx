@@ -4,7 +4,7 @@ import { loadOgFonts, ogColors, ogSize } from "@/lib/og";
 
 export const size = ogSize;
 export const contentType = "image/png";
-export const alt = "andrej.sh";
+export const alt = "Andrej Acevski";
 
 export async function generateStaticParams() {
   const slugs = await getPostSlugs();

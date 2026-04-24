@@ -1,7 +1,7 @@
 import { getPosts } from "@/lib/content";
 
 const siteUrl = "https://andrej.sh";
-const siteTitle = "andrej.sh · Writing";
+const siteTitle = "Writing by Andrej Acevski";
 const siteDescription =
   "Writing by Andrej Acevski: open source, Go, TypeScript, and building things that get out of the way.";
 
