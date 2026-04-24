@@ -62,8 +62,8 @@ export default function ReadingPage() {
       )}
 
       <p className="muted small" style={{ marginTop: "3rem" }}>
-        I also dumped a year of Kindle highlights into a dashboard —{" "}
-        <a href="/posts/kindle-reading-stats-dashboard">the writeup is here</a>.
+        I also dumped a year of Kindle highlights into a dashboard.{" "}
+        <a href="/posts/kindle-reading-stats-dashboard">The writeup is here</a>.
       </p>
     </div>
   );

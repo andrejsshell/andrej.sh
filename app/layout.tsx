@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   alternates: {
     types: {
       "application/rss+xml": [
-        { url: "/rss.xml", title: `${site.name} — Writing` },
+        { url: "/rss.xml", title: `${site.name} · Writing` },
       ],
     },
   },

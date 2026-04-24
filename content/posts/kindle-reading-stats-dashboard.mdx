@@ -7,11 +7,11 @@ export const metadata = {
 
 I love reading. I’m bad at tracking what I read.
 
-Kindle’s built-in stats are basic. Goodreads feels bloated. I wanted something minimal that I controlled. So I built one.<Sidenote n={1}>I’ve since switched to a simpler Markdown-based system — Amazon patched the jailbreak in late 2025. The approach below still works if you’re on an older firmware.</Sidenote>
+Kindle’s built-in stats are basic. Goodreads feels bloated. I wanted something minimal that I controlled. So I built one.<Sidenote n={1}>I’ve since switched to a simpler Markdown-based system. Amazon patched the jailbreak in late 2025. The approach below still works if you’re on an older firmware.</Sidenote>
 
 ## KOReader
 
-[KOReader](https://koreader.rocks) is an open-source e-book reader that runs on Kindle. It’s fast, customizable, and — for my purposes — it logs everything to a SQLite database.
+[KOReader](https://koreader.rocks) is an open-source e-book reader that runs on Kindle. It’s fast, customizable, and, for my purposes, it logs everything to a SQLite database.
 
 The killer feature: it can sync that database to cloud storage over WebDAV.
 
@@ -53,8 +53,8 @@ async function fetchKOReaderStats() {
 
 Two tables matter:
 
-- `book` — titles, authors, pages, `last_open`
-- `page_stat_data` — individual reading sessions, with timestamps and duration
+- `book`: titles, authors, pages, `last_open`
+- `page_stat_data`: individual reading sessions, with timestamps and duration
 
 Everything else is aggregations.
 
@@ -126,4 +126,4 @@ KOREADER_DB_PATH=/KOReader/statistics.sqlite3
 
 All of it updates automatically when my Kindle syncs. Total cost: $0/month.
 
-The code lives in [github.com/andrejsshell/andrej.sh](https://github.com/andrejsshell/andrej.sh) — the integration is in `pkg/koreader/`. Fork it, use it, make it better.
+The code lives in [github.com/andrejsshell/andrej.sh](https://github.com/andrejsshell/andrej.sh). The integration is in `pkg/koreader/`. Fork it, use it, make it better.

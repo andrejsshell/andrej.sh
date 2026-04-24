@@ -3,7 +3,7 @@ import { loadOgFonts, ogColors, ogSize } from "@/lib/og";
 
 export const size = ogSize;
 export const contentType = "image/png";
-export const alt = "Andrej Acevski — andrej.sh";
+export const alt = "Andrej Acevski · andrej.sh";
 
 export default async function OG() {
   const fonts = await loadOgFonts();
