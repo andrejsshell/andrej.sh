@@ -7,16 +7,18 @@ import "./globals.css";
 
 const stixTwoText = STIX_Two_Text({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   display: "swap",
+  preload: true,
   variable: "--font-stix-two-text",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
   display: "swap",
+  preload: false,
   variable: "--font-jetbrains-mono",
 });
 
