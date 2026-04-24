@@ -59,12 +59,6 @@ export const workHistory: Job[] = [
     desc: "Building affiliate marketing software for SaaS. Stripe, Paddle, and Chargebee integrations.",
   },
   {
-    role: "Software Engineer",
-    company: "CodeChem",
-    period: "2022 — 2024",
-    desc: "Frontend with React and TypeScript; backend with Node.js on AWS (Lambda, Cognito, DynamoDB).",
-  },
-  {
     role: "Open Source Contributor",
     company: "Chakra UI · Material UI",
     period: "2021 — now",
