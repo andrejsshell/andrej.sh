@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { STIX_Two_Text, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { site } from "@/lib/site";
@@ -99,6 +100,11 @@ export default function RootLayout({
         </main>
         <Analytics />
         <SpeedInsights />
+        <Script
+          src="https://cdn.tolt.io/tolt-v2.min.js"
+          data-tolt="pk_xw5aA3ciT9NVAg6vjZPpYs7v"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
