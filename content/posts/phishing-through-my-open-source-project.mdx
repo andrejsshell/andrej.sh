@@ -5,7 +5,7 @@ export const metadata = {
     "A botnet abused the hosted version of my open source project to phish 14,000 strangers. What I found, what I cleaned up, and what it taught me about running cloud on behalf of people I’ve never met.",
 };
 
-Sunday morning, [Resend](https://resend.com) emailed me. My sending quota for cloud.kaneo.app was exhausted. I had not sent anything in days.
+Thursday morning, [Resend](https://resend.com) emailed me. My sending quota for cloud.kaneo.app was exhausted. I had not sent anything in days.
 
 I run an open source project management tool called [Kaneo](https://github.com/usekaneo/kaneo). Simple, all you need and nothing you don’t. The cloud version exists so people can try it without standing up Postgres. It’s the same software my self-hosted users run, and until last weekend it was almost exclusively used by developers evaluating it for their teams.
 
@@ -21,7 +21,7 @@ There were 949 of them. All created in a three-hour window on May 28th. Each cam
 
 The invitation email went out from my verified Resend domain. Subject line: the workspace name. Body: a polite “&lt;phishing payload&gt; invited you to join &lt;phishing payload&gt; on Kaneo.” Click here to accept. The “click here” pointed at my actual site, which made the email look real, and the workspace name carried the scam, a link to craftum.io with a tracking suffix.
 
-Whoever did this was patient. They had clearly tested. The workspace names weren’t random. They followed a template, with rotating variations on bank names, crypto amounts, and presenter names. They had a recipient list ready, presumably bought. They timed it for 4am UTC on a Sunday. They got about an hour and a half of clean sending before Resend’s rate detection kicked in and stopped them.
+Whoever did this was patient. They had clearly tested. The workspace names weren’t random. They followed a template, with rotating variations on bank names, crypto amounts, and presenter names. They had a recipient list ready, presumably bought. They timed it for 4am UTC on a Thursday. They got about an hour and a half of clean sending before Resend’s rate detection kicked in and stopped them.
 
 By the time I woke up it was over. The Resend quota alert that woke me was a coincidence. The attack had finished hours earlier.
 
@@ -49,7 +49,7 @@ But the cloud version’s threat model is nothing like the self-hosted one. Self
 
 On a multi-tenant SaaS, the operator is me, the users are everyone, and the operator vouches for everything the user does to every external system the SaaS touches. Resend doesn’t know the difference between an invite I sent and an invite a stranger sent through my project. My DKIM signature is on both.
 
-I’d been thinking of cloud.kaneo.app as “the same software, hosted for you.” It was always more than that. It was “the same software, plus my Resend reputation, my IP reputation, my domain’s relationship with every mail provider on the internet.” For 14 months no one cared. Last Sunday someone did.
+I’d been thinking of cloud.kaneo.app as “the same software, hosted for you.” It was always more than that. It was “the same software, plus my Resend reputation, my IP reputation, my domain’s relationship with every mail provider on the internet.” For 14 months no one cared. Last Thursday someone did.
 
 ## What I’m changing
 
