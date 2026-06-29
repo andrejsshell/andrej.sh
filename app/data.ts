@@ -27,5 +27,10 @@ export const reading: {
       author: "Robert Kiyosaki, Sharon Lechter",
       cover: { bg: "#8b2d1e", fg: "#f5efdc" },
     },
+    {
+      title: "The Fine Art of Small Talk",
+      author: "Debra Fine",
+      cover: { bg: "#1f6f6f", fg: "#f5efdc" },
+    },
   ],
 };
