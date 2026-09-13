@@ -32,5 +32,10 @@ export const reading: {
       author: "Debra Fine",
       cover: { bg: "#1f6f6f", fg: "#f5efdc" },
     },
+    {
+      title: "Избрани драми",
+      author: "Горан Стефановски",
+      cover: { bg: "#5a2d6e", fg: "#f5efdc" },
+    },
   ],
 };
