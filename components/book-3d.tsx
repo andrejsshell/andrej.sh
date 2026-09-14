@@ -16,6 +16,8 @@ const REST_X = -7;
 const RANGE_Y = 30;
 const RANGE_X = 12;
 
+const clamp = (n: number) => Math.min(0.5, Math.max(-0.5, n));
+
 export function Book3D({ book }: { book: Book }) {
   const ref = useRef<HTMLDivElement>(null);
   const fg = book.cover.fg ?? "#f5efdc";
@@ -28,24 +30,42 @@ export function Book3D({ book }: { book: Book }) {
     el.style.setProperty("--rx", `${rx}deg`);
   };
 
-  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== "mouse") return;
+  const rest = () => setAngles(REST_Y, REST_X);
+
+  /**
+   * Aim the book at the pointer, which acts as a viewpoint: left of the book
+   * opens the spine, above it tips the head into view. Touch pointers are
+   * implicitly captured on pointerdown, so a finger can travel well outside
+   * the element — clamp rather than let the angles run away.
+   */
+  const track = (e: React.PointerEvent<HTMLDivElement>) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const r = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5; // -0.5 … 0.5
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    // The cursor acts as the viewpoint: left of the book opens the spine,
-    // above it tips the head into view.
+    const px = clamp((e.clientX - r.left) / r.width - 0.5); // -0.5 … 0.5
+    const py = clamp((e.clientY - r.top) / r.height - 0.5);
     setAngles(REST_Y - px * RANGE_Y, REST_X + py * RANGE_X);
   };
 
-  const onPointerLeave = () => setAngles(REST_Y, REST_X);
+  // Touch never fires pointermove without contact, so a tap would otherwise
+  // read as dead. Aiming on pointerdown makes a single tap respond too.
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") track(e);
+  };
+
+  // pointerleave is unreliable for touch, and the browser sends pointercancel
+  // when it claims the gesture for a vertical scroll.
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") rest();
+  };
 
   return (
     <div
       className="book-stage"
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
+      onPointerMove={track}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onPointerCancel={rest}
+      onPointerLeave={rest}
     >
       <div className="book-shadow" />
       <div

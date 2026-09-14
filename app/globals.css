@@ -517,6 +517,9 @@ code {
   /* room for the book to swing without clipping its neighbours */
   padding: 0 4% 0 10%;
   margin: 0 -4% 0 -10%;
+  /* horizontal drags turn the book; vertical ones still scroll the page */
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .book-3d {
@@ -535,6 +538,9 @@ code {
   transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(calc(var(--depth) / -2));
   transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
+  /* the cover text is decorative; dragging shouldn't select it */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .book-stage:hover .book-3d {
