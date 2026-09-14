@@ -195,6 +195,15 @@ hr {
   margin-bottom: 1rem;
 }
 
+.eyebrow {
+  font-size: 13px;
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
 .writing-list {
   list-style: none;
   padding: 0;
