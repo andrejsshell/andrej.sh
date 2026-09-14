@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { reading, type Book } from "@/app/data";
+import { Book3D } from "@/components/book-3d";
 
 export const metadata: Metadata = {
   title: "Reading",
@@ -13,18 +14,9 @@ export const metadata: Metadata = {
 };
 
 function BookCard({ book }: { book: Book }) {
-  const fg = book.cover.fg ?? "#f5efdc";
   return (
     <div className="book">
-      <div
-        className="book-cover"
-        style={{ background: book.cover.bg, color: fg }}
-      >
-        <div className="title">{book.title}</div>
-        <div className="author" style={{ color: fg, opacity: 0.7 }}>
-          {book.author}
-        </div>
-      </div>
+      <Book3D book={book} />
       <div className="book-meta">
         <span className="t">{book.title}</span>
         <span className="a">{book.author}</span>
