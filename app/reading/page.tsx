@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { reading, type Book } from "@/app/data";
-import { Book3D } from "@/components/book-3d";
+import { reading } from "@/app/data";
+import { Bookshelf, type ShelfBook } from "@/components/bookshelf";
 
 export const metadata: Metadata = {
   title: "Reading",
@@ -13,45 +13,19 @@ export const metadata: Metadata = {
   },
 };
 
-function BookCard({ book }: { book: Book }) {
-  return (
-    <div className="book">
-      <Book3D book={book} />
-      <div className="book-meta">
-        <span className="t">{book.title}</span>
-        <span className="a">{book.author}</span>
-      </div>
-    </div>
-  );
-}
-
 export default function ReadingPage() {
-  const { current, finished } = reading;
+  const books: ShelfBook[] = [
+    ...reading.current.map((b) => ({ ...b, status: "current" as const })),
+    ...reading.finished.map((b) => ({ ...b, status: "finished" as const })),
+  ];
   return (
     <div className="col page-enter" style={{ maxWidth: 720 }}>
       <h1 className="hero-name">Reading</h1>
-
-      {current.length > 0 && (
-        <>
-          <div className="shelf-section-title">Currently reading</div>
-          <div className="shelf">
-            {current.map((b) => (
-              <BookCard key={b.title} book={b} />
-            ))}
-          </div>
-        </>
-      )}
-
-      {finished.length > 0 && (
-        <>
-          <div className="shelf-section-title">Finished</div>
-          <div className="shelf">
-            {finished.map((b) => (
-              <BookCard key={b.title} book={b} />
-            ))}
-          </div>
-        </>
-      )}
+      <p className="muted">
+        What I’m reading now, and the ones I’ve finished. The ribboned spines
+        are still in progress.
+      </p>
+      <Bookshelf books={books} />
     </div>
   );
 }
