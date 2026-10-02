@@ -3,7 +3,7 @@ export const site = {
   name: "andrej.sh",
   title: "Andrej Acevski",
   description:
-    "Andrej Acevski, software engineer at Tolt. Building Kaneo and other tools that make developers’ lives easier. Writing about Go, TypeScript, and open source.",
+    "Andrej Acevski, founder of Kaneo, the open source project management platform. Software engineer writing about Go, TypeScript, and open source.",
   author: {
     name: "Andrej Acevski",
     twitter: "@andrejsshell",

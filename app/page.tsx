@@ -17,10 +17,13 @@ export default async function Home() {
     name: site.author.name,
     url: site.url,
     image: `${site.url}/apple-icon.png`,
-    jobTitle: "Product Engineer",
+    jobTitle: "Founder of Kaneo",
     description: site.description,
     sameAs: [site.author.github, site.author.twitterUrl],
-    worksFor: { "@type": "Organization", name: "Tolt", url: "https://tolt.com" },
+    worksFor: [
+      { "@type": "Organization", name: "Kaneo", url: "https://kaneo.app" },
+      { "@type": "Organization", name: "Tolt", url: "https://tolt.com" },
+    ],
     alumniOf: {
       "@type": "CollegeOrUniversity",
       name: "Faculty of Computer Science and Engineering, Ss. Cyril and Methodius University",
@@ -47,21 +50,31 @@ export default async function Home() {
       </header>
 
       <p>
-        I’m a product engineer at{" "}
-        <a href="https://tolt.com" target="_blank" rel="noreferrer">
-          Tolt
-        </a>
-        , the affiliate, referral, and partnership platform for SaaS. I work
-        across the stack, shipping the tools our customers use to grow.
-      </p>
-
-      <p>
-        On the side I build{" "}
+        I build{" "}
         <a href="https://kaneo.app" target="_blank" rel="noreferrer">
           Kaneo
         </a>
-        , an open source, self-hosted project management platform. The idea is
-        simple: all you need, nothing you don’t. No tracking, no bloat.
+        , an open source project management platform for teams who want
+        something fast, simple, and their own. Host it yourself for free or use
+        Kaneo Cloud. I started it at the end of 2024, and it has grown to more
+        than 9,000 stars and 100 contributors on{" "}
+        <a
+          href="https://github.com/usekaneo/kaneo"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub
+        </a>
+        .
+      </p>
+
+      <p>
+        By day I’m a product engineer at{" "}
+        <a href="https://tolt.com" target="_blank" rel="noreferrer">
+          Tolt
+        </a>
+        , working across the stack on the affiliate and referral platform for
+        SaaS.
       </p>
 
       <p>

@@ -43,8 +43,8 @@ export default async function OG() {
             maxWidth: 960,
           }}
         >
-          Software engineer and open source contributor. Building Kaneo, and
-          small tools that make developers’ lives easier.
+          Founder of Kaneo, the open source project management platform.
+          Software engineer and open source advocate.
         </div>
       </div>
     ),
